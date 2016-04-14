@@ -52,7 +52,13 @@ struct tevent_sigcounter {
 	uint32_t seen;
 };
 
+#if defined(HAVE___SYNC_FETCH_AND_ADD)
+#define TEVENT_SIG_INCREMENT(s) __sync_fetch_and_add(&((s).count), 1)
+#elif defined(HAVE_ATOMIC_ADD_32)
+#define TEVENT_SIG_INCREMENT(s) atomic_add_32(&((s).count), 1)
+#else
 #define TEVENT_SIG_INCREMENT(s) (s).count++
+#endif
 #define TEVENT_SIG_SEEN(s, n) (s).seen += (n)
 #define TEVENT_SIG_PENDING(s) ((s).seen != (s).count)
 
@@ -451,7 +457,7 @@ int tevent_common_check_signal(struct tevent_context *ev)
 		}
 
 #ifdef SA_SIGINFO
-		if (clear_processed_siginfo) {
+		if (clear_processed_siginfo && sig_state->sig_info[i] != NULL) {
 			uint32_t j;
 			for (j=0;j<count;j++) {
 				uint32_t ofs = (counter.seen + j)

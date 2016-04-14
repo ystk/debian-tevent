@@ -5,14 +5,14 @@ Maintainer: Debian Samba Maintainers <pkg-samba-maint@lists.alioth.debian.org>
 Uploaders: Jelmer Vernooij <jelmer@debian.org>
 Build-Depends: debhelper (>= 9),
                libaio-dev [linux-any],
-               libtalloc-dev (>= 2.0.8~),
+               libtalloc-dev (>= 2.1.2~),
                pkg-config,
                python,
                python-all-dev (>= 2.6.6-3),
-               python-talloc-dev (>= 2.0.8~)
-Standards-Version: 3.9.5
+               python-talloc-dev (>= 2.1.2~)
+Standards-Version: 3.9.6
 Homepage: http://tevent.samba.org/
-Vcs-Git: git://git.debian.org/pkg-samba/tevent.git
+Vcs-Git: git://anonscm.debian.org/pkg-samba/tevent.git -b unstable
 
 Package: libtevent0
 Architecture: any
@@ -34,6 +34,7 @@ Package: libtevent0-dbg
 Section: debug
 Priority: extra
 Architecture: any
+Multi-Arch: same
 Depends: libtevent0 (= ${binary:Version}), ${misc:Depends}
 Recommends: libc6-dbg, libtalloc2-dbg
 Description: talloc-based event loop library - debug symbols

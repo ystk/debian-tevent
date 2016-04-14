@@ -1,3 +1,49 @@
+tevent (0.9.25-0+deb8u1) jessie-security; urgency=high
+
+  [ Andrew Bartlett ]
+  * Update to stable required for Samba security release.
+
+ -- Mathieu Parent <sathieu@debian.org>  Tue, 12 Apr 2016 07:41:40 +0200
+
+tevent (0.9.25-2) unstable; urgency=medium
+
+  * Merge back in packaging changes between 0.9.18 and 0.9.24.
+  * Drop revert-ldflags-atend: applied upstream.
+  * Force LD_LIBRARY_PATH=bin/shared to fix python tests.
+
+ -- Jelmer Vernooij <jelmer@debian.org>  Sun, 20 Sep 2015 15:17:00 +0000
+
+tevent (0.9.25-1) unstable; urgency=medium
+
+  * Fix watch file.
+  * New upstream release.
+  * Bump standards version to 3.9.6 (no changes).
+  * debian/copyright: Fix duplicate license names.
+
+ -- Jelmer Vernooij <jelmer@debian.org>  Sat, 19 Sep 2015 03:16:10 +0000
+
+tevent (0.9.24-1) unstable; urgency=medium
+
+  * Fix upstream location in debian/watch.
+  * New upstream release.
+  * Bump standards version to 3.9.6 (no changes).
+  * Use dpkg-buildflags.
+  * Add patch revert-ldflags-atend: Reverts upstream change preventing
+    use of -Wl,--as-needed.
+  * Fix lib/replace paths in debian/copyright.
+  * Set libtevent0-dbg to Multi-Arch: Same.
+  * Don't override CFLAGS from dpkg-getbuildflags, enabling hardening.
+
+ -- Jelmer Vernooij <jelmer@debian.org>  Sat, 25 Apr 2015 13:20:07 +0000
+
+tevent (0.9.22-1) unstable; urgency=medium
+
+  * New upstream release.
+  * Use canonical URL in Vcs-Git header.
+  * Set branch in Vcs-Git header.
+
+ -- Jelmer Vernooij <jelmer@debian.org>  Sat, 05 Jul 2014 23:42:44 +0200
+
 tevent (0.9.21-1) unstable; urgency=medium
 
   * Change maintainer to Debian Samba maintainers, move myself to
