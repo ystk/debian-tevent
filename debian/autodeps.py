@@ -118,10 +118,9 @@ def update_control():
 
 def forced_minimum_library_versions():
     libraries = [
-        ("tdb", "lib/tdb/wscript"),
         ("talloc", "lib/talloc/wscript"),
-        ("ldb", "source4/lib/ldb/wscript"),
-        ("tevent", "lib/tevent/wscript")]
+        ("pytalloc-util", "lib/talloc/wscript"),
+        ]
     eq_config = LibraryEquivalents('debian/library-equivalents')
     for (name, path) in libraries:
         version = find_version(os.path.join(tree, path))

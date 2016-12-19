@@ -19,7 +19,7 @@ DEB_HOST_MULTIARCH ?= $(shell dpkg-architecture -qDEB_HOST_MULTIARCH)
 override_dh_auto_configure:
 	CPPFLAGS="$(CPPFLAGS)" LDFLAGS="$(LDFLAGS)" CFLAGS="$(CFLAGS)" ./configure --prefix=/usr --bundled-libraries=NONE \
 		   --disable-rpath --disable-rpath-install \
-		   --minimum-library-version="$(shell ./debian/autodeps.py --minimum-library-version)" \
+		   --minimum-library-version="$(shell ./debian/autodeps.py --minimum-library-version .)" \
 		   --libdir=/usr/lib/$(DEB_HOST_MULTIARCH)
 
 override_dh_auto_build:

@@ -1,3 +1,11 @@
+tevent (0.9.28-0+deb8u1) jessie; urgency=high
+
+  * Upload to stable for Samba security release.
+  * Drop 01_fix_ld_library patch; applied upstream.
+  * Allow build against older talloc.
+
+ -- Jelmer Vernooĳ <jelmer@debian.org>  Sat, 08 Oct 2016 22:31:26 +0000
+
 tevent (0.9.25-0+deb8u1) jessie-security; urgency=high
 
   [ Andrew Bartlett ]

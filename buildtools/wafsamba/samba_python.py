@@ -1,14 +1,16 @@
 # waf build tool for building IDL files with pidl
 
-import Build
-from samba_utils import *
-from samba_autoconf import *
-
+import os
+import Build, Logs, Utils, Configure
 from Configure import conf
 
 @conf
 def SAMBA_CHECK_PYTHON(conf, mandatory=True, version=(2,4,2)):
     # enable tool to build python extensions
+    if conf.env.HAVE_PYTHON_H:
+        conf.check_python_version(version)
+        return
+
     interpreters = []
 
     if conf.env['EXTRA_PYTHON']:
@@ -21,7 +23,7 @@ def SAMBA_CHECK_PYTHON(conf, mandatory=True, version=(2,4,2)):
         try:
             conf.check_python_version((3, 3, 0))
         except Exception:
-            warn('extra-python needs to be Python 3.3 or later')
+            Logs.warn('extra-python needs to be Python 3.3 or later')
             raise
         interpreters.append(conf.env['PYTHON'])
         conf.setenv('default')
@@ -55,9 +57,18 @@ def SAMBA_CHECK_PYTHON_HEADERS(conf, mandatory=True):
     else:
         conf.msg("python headers", "using cache")
 
+    # we don't want PYTHONDIR in config.h, as otherwise changing
+    # --prefix causes a complete rebuild
+    del(conf.env.defines['PYTHONDIR'])
+    del(conf.env.defines['PYTHONARCHDIR'])
 
 def _check_python_headers(conf, mandatory):
-    conf.check_python_headers(mandatory=mandatory)
+    try:
+        Configure.ConfigurationError
+        conf.check_python_headers(mandatory=mandatory)
+    except Configure.ConfigurationError:
+        if mandatory:
+             raise
 
     if conf.env['PYTHON_VERSION'] > '3':
         abi_pattern = os.path.splitext(conf.env['pyext_PATTERN'])[0]
@@ -86,7 +97,18 @@ def SAMBA_PYTHON(bld, name,
     # when we support static python modules we'll need to gather
     # the list from all the SAMBA_PYTHON() targets
     if init_function_sentinel is not None:
-        cflags += '-DSTATIC_LIBPYTHON_MODULES=%s' % init_function_sentinel
+        cflags += ' -DSTATIC_LIBPYTHON_MODULES=%s' % init_function_sentinel
+
+    # From https://docs.python.org/2/c-api/arg.html:
+    # Starting with Python 2.5 the type of the length argument to
+    # PyArg_ParseTuple(), PyArg_ParseTupleAndKeywords() and PyArg_Parse()
+    # can be controlled by defining the macro PY_SSIZE_T_CLEAN before
+    # including Python.h. If the macro is defined, length is a Py_ssize_t
+    # rather than an int.
+
+    # Because <Python.h> if often included before includes.h/config.h
+    # This must be in the -D compiler options
+    cflags += ' -DPY_SSIZE_T_CLEAN=1'
 
     source = bld.EXPAND_VARIABLES(source, vars=vars)
 
@@ -109,7 +131,6 @@ def SAMBA_PYTHON(bld, name,
                       target_type='PYTHON',
                       install_path='${PYTHONARCHDIR}',
                       allow_undefined_symbols=True,
-                      allow_warnings=True,
                       install=install,
                       enabled=enabled)
 
